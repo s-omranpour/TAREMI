@@ -2,11 +2,14 @@ from django.http import HttpResponse
 from django.shortcuts import render
 from .models import *
 
-def home(request):
-    return render(request, 'broker/home.html', context={})
+
+def instructor_home(request):
+    return render(request, 'broker/instructor_home.html', context={})
+
 
 def display(request):
     return HttpResponse('See Asghar : %s' % display_form(ApplicationResponse.objects.first()))
+
 
 def display_form(res: ApplicationResponse):
     html = ""
