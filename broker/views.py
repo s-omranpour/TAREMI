@@ -4,4 +4,5 @@ from django.shortcuts import render
 
 
 def broker_form(request):
-    return render(request, 'broker/form.html', context={})
+
+    return render(request, 'broker/instructor_home.html', context={})

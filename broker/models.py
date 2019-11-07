@@ -31,3 +31,4 @@ class NumericalQuestion(models.Model):
 class Choice(models.Model):
     value = models.CharField("Value", max_length=CHOICE_MAX_LENGTH)
     question = models.ForeignKey(MultiChoiceQuestion, on_delete=models.CASCADE)
+
