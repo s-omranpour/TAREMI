@@ -2,8 +2,9 @@ from django.http import HttpResponse
 from django.shortcuts import render
 from .models import *
 from django.http import HttpResponse
+from django.contrib.auth.decorators import login_required
 
-
+@login_required(login_url='/account/login')
 def instructor_home(request):
     return render(request, 'broker/instructor_home.html', context={})
 
