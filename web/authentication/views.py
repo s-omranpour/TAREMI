@@ -8,14 +8,16 @@ from django.conf import settings
 
 
 def login_user(request):
-    redirect_to = request.GET.get('next', settings.LOGIN_REDIRECT_URL)
+    redirect_to = settings.LOGIN_REDIRECT_URL
+
     if request.user.is_authenticated:
         return redirect(redirect_to)
+
     if request.method == 'POST':
         req = request.POST
         user = authenticate(username=req['username'], password=req['password'])
         if not user:
-            return render(request,'authentication/login.html',{'message': 'wrong password'})
+            return render(request,'authentication/login.html',{'error_message': 'Wrong password'})
         else:
             login(request, user)
             return redirect(redirect_to)
@@ -23,7 +25,20 @@ def login_user(request):
     return render(request,'authentication/login.html',{})
 
 
-def reset_password(request):
+def logout_user(request):
+    if request.user.is_authenticated:
+        logout(request)
+    return redirect('login')
+
+def redirect_user(request):
+    redirect_to = settings.LOGIN_REDIRECT_URL
+    if request.user.is_authenticated:
+        return redirect(redirect_to)
+    return redirect('login')
+
+
+
+# def reset_password(request):
     # if request.method == 'POST':
     #     req = request.POST
     #     email = req['email']
@@ -32,10 +47,4 @@ def reset_password(request):
             
     #     return HttpResponse('DONE!')
 
-    return render(request,'authentication/reset_password.html',{})
-
-def logout_user(request):
-    if request.user.is_authenticated:
-        logout(request)
-    return redirect('login')
-
+    # return render(request,'authentication/reset_password.html',{})

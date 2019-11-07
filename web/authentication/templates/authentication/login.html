@@ -1,35 +1,90 @@
 {% extends "base.html" %}
+{% load static %}
+
+{% block head %}
+  <script src="{% static 'js/jquery.min.js' %}"></script>
+  {{ block.super }}
+    <!-- Standard Meta -->
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  
+    <style type="text/css">
+      body {
+        background-color: #EEEEEE;
+      }
+      body > .grid {
+        height: 100%;
+      }
+      .image {
+        margin-top: -100px;
+      }
+      .column {
+        max-width: 450px;
+      }
+    </style>
+    <script>
+    $(document)
+      .ready(function() {
+        $('.ui.form')
+          .form({
+            fields: {
+              username: {
+                identifier  : 'username',
+                rules: [
+                  {
+                    type   : 'empty',
+                    prompt : 'Please enter your username'
+                  }
+                ]
+              },
+              password: {
+                identifier  : 'password',
+                rules: [
+                  {
+                    type   : 'empty',
+                    prompt : 'Please enter your password'
+                  }
+                ]
+              }
+            }
+          })
+        ;
+      });
+    </script>
+{% endblock %}
+
 
 {% block body %}
-<html>
-    <head>
-
-    </head>
-
-    <body>
-        <p>{{ message }}</p>
-        <form action="" method="post">
-            {% csrf_token %}
-          
-            <div class="container">
-              <label for="uname"><b>Username</b></label>
-              <input type="text" placeholder="Enter Username" name="username" required>
-          
-              <label for="psw"><b>Password</b></label>
-              <input type="password" placeholder="Enter Password" name="password" required>
-          
-              <button type="submit">Login</button>
-              <label>
-                <input type="checkbox" checked="checked" name="remember"> Remember me
-              </label>
+<div class="ui middle aligned center aligned grid">
+    <div class="column">
+      <h2 class="ui black header">
+        <div class="content">
+            <img src="{% static 'images/logo.png' %}" style="height:2em; vertical-align: middle;"><span style="vertical-align: middle; margin-left:-0.5em">AREMI</span>
+        </div>
+      </h2>
+      <form class="ui large form{% if error_message %} error{% endif %}" action="" method="POST">
+        {% csrf_token %}
+        <div class="ui stacked segment">
+          <div class="field">
+            <div class="ui left icon input">
+              <i class="user icon"></i>
+              <input type="text" name="username" placeholder="Username">
             </div>
-          
-            <div class="container" style="background-color:#f1f1f1">
-              <button type="button" class="cancelbtn">Cancel</button>
-              <span class="psw">Forgot <a href="#">password?</a></span>
-          </form>
-          
-
-    </body>
-</html>
+          </div>
+          <div class="field">
+            <div class="ui left icon input">
+              <i class="lock icon"></i>
+              <input type="password" name="password" placeholder="Password">
+            </div>
+          </div>
+          <button class="ui fluid large grey submit button" type="submit">Login</button>
+        </div>
+  
+        <div class="ui error message">{% if error_message %}{{ error_message }}{% endif %}</div>
+  
+      </form>
+  
+    </div>
+  </div>
 {% endblock %}
