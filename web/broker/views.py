@@ -1,8 +1,18 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from .models import *
 
 def home(request):
-    return render(request, 'broker/home.html', context={})
+    user = request.user
+    if user.student:
+        return redirect('student_home')
+    return
+
+def instructor_home(instructor):
+    pass
+
+
+def student_home(student):
+    pass
 
 def display(request):
     return HttpResponse('See Asghar : %s' % display_form(ApplicationResponse.objects.first()))

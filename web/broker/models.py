@@ -27,12 +27,6 @@ class ApplicationResponse(models.Model):
     owner = models.ForeignKey(Student, on_delete=models.CASCADE)
     date = models.DateField("date_submitted", auto_now=True)
 
-    class Meta:
-        # constraints = 
-
-    def get_form(self):
-        return self.answers.first().form
-
 
 class Answer(models.Model):
     class Meta:
