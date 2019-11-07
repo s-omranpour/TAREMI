@@ -35,25 +35,6 @@
 {% endblock %}
 
 {% block content %}
-  <form class="ui large form{% if error_message %} error{% endif %}" action="" method="POST">
-    {% csrf_token %}
-    <div class="ui stacked segment">
-      <div class="field">
-        <div class="ui left icon input">
-          <i class="user icon"></i>
-          <input type="text" name="username" placeholder="Username">
-        </div>
-      </div>
-      <div class="field">
-        <div class="ui left icon input">
-          <i class="lock icon"></i>
-          <input type="password" name="password" placeholder="Password">
-        </div>
-      </div>
-      <button class="ui fluid large grey submit button" type="submit">Login</button>
-    </div>
-
-    <div class="ui error message">{% if error_message %}{{ error_message }}{% endif %}</div>
-
-  </form>
+  {# type must be success or error #}
+  <div class="ui message {{ type }}">{{ message|safe }}</div>
 {% endblock %}
