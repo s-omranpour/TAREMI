@@ -6,6 +6,8 @@ from .models import *
 def instructor_home(request):
     return render(request, 'broker/instructor_home.html', context={})
 
+def form_filling(request):
+    return render(request, 'broker')
 
 def display(request):
     return HttpResponse('See Asghar : %s' % display_form(ApplicationResponse.objects.first()))
