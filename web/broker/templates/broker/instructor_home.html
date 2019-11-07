@@ -3,42 +3,52 @@
 
 {% block head %}
     {{block.super}}
-
+    <script >
+        function get_form_detail(id) {
+          $.get("/instructor/forms/"+id);
+        }
+    </script>
 {% endblock %}
+
 {% block content %}
+{{responses}}
+
 
   <div class="ui main text container" style="padding-left: -10em; ">
     <h1 class="ui header">List of Active Applications</h1>
       <div class="ui one column stackable grid">
 
+        
+        {% for form,res in form_res %}
           <div class="column">
             <div class="ui raised segment">
+              
                 <div class="ui five column stackable grid">
 
                     <div class="column middle aligned center aligned">
-                        <p>Course Name</p>
+                        <p>{{form.course_id}}</p>
                     </div>
 
                     <div class="column middle aligned center aligned">
                         <div class="ui label sc">
-                              <i class="clock outline icon"></i> release date
+                              <i class="clock outline icon"></i> {{form.release_date}}
                         </div>
                     </div>
 
                     <div class="column middle aligned center aligned">
                         <div class="ui label sc">
-                              <i class="clock icon"></i> deadline
+                              <i class="clock icon"></i> {{form.deadline}}
                         </div>
                     </div>
 
                     <div class="column middle aligned center aligned">
                         <div class="ui label sc">
-                              <i class="pen square icon"></i> Num of Rsp.
+                              <i class="pen square icon"></i> {{res}}
                         </div>
                     </div>
 
                     <div class="column middle aligned center aligned">
-                        <div class="ui animated button" tabindex="0">
+                        <div class="ui animated button" tabindex="0" onclick="console.log('kososher');get_form_detail({{form.id}});">
                           <div class="visible content">Details</div>
                           <div class="hidden content">
                             <i class="right arrow icon"></i>
@@ -46,8 +56,9 @@
                       </div>
                     </div>
 
-                </div>
+                </div>   
             </div>
+          {% endfor %}
       </div>
     </div>
   </div>
