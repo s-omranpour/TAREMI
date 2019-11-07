@@ -1,11 +1,11 @@
 from django.db import models
 
 from broker.constants import *
-
+from authentication.models import Instructor
 
 class ApplicationForm(models.Model):
     name = models.CharField("Name", max_length=NAME_LENGTH)
-    # creator = foreignkey
+    creator = models.ForeingKey(Instructor, on_delete=models.CASCADE)
 
 class MultiChoiceQuestion(models.Model):
     form = models.ForeignKey(ApplicationForm, on_delete=models.CASCADE, related_name="textual_questions")
