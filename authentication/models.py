@@ -1,20 +1,19 @@
 from django.db import models
 from django.contrib.auth.models import User
+import authentication.constants as CONSTANTS
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 
 class Student(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    name = models.CharField(max_length=50)
-    surname = models.CharField(max_length=50)
-    student_id = models.IntegerField(max_length=20)
-    major = models.(max_length=50)
-    enterance_year = models.IntegerField(max_length=4)
+    student_id = models.IntegerField(null=False, default=999999)
+    major = models.CharField(max_length=2, choices=CONSTANTS.MAJORS, default='1')
+    enterance_year = models.IntegerField(null=False, default=1395)
 
 
 class Instructor(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    name = models.CharField(max_length=50)
-    surname = models.CharField(max_length=50)
 
 
 @receiver(post_save, sender=User)
