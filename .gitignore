@@ -4,6 +4,9 @@
 # PyCharm
 *.iml
 
+# idea
+.idea/
+
 # VirtualEnv
 venv/
 

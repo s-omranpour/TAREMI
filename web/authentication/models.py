@@ -8,8 +8,8 @@ from django.dispatch import receiver
 class Student(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     student_id = models.IntegerField(null=False, default=999999)
-    major = models.CharField(max_length=2, choices=CONSTANTS.MAJORS, default='1')
-    enterance_year = models.IntegerField(null=False, default=1395)
+#    major = models.CharField(max_length=2, choices=CONSTANTS.MAJORS, default='1')
+#    enterance_year = models.IntegerField(null=False, default=1395)
 
 class Instructor(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
