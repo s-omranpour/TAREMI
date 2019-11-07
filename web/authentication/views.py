@@ -32,6 +32,8 @@ def logout_user(request):
     return redirect('login')
 
 
+
+
 def signup_user(request):
     # TODO get redir from POST/GET
     redirect_to = settings.LOGIN_REDIRECT_URL
