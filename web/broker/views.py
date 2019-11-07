@@ -15,3 +15,4 @@ def display_form(res: ApplicationResponse):
     return html
 
         
+
