@@ -6,8 +6,10 @@ from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
 
+from .models import Student
 
 def login_user(request):
+    # TODO get redir from POST/GET
     redirect_to = settings.LOGIN_REDIRECT_URL
 
     if request.user.is_authenticated:
@@ -24,27 +26,29 @@ def login_user(request):
 
     return render(request,'authentication/login.html',{})
 
-
 def logout_user(request):
     if request.user.is_authenticated:
         logout(request)
     return redirect('login')
 
-def redirect_user(request):
+
+def signup_user(request):
+    # TODO get redir from POST/GET
     redirect_to = settings.LOGIN_REDIRECT_URL
+
     if request.user.is_authenticated:
         return redirect(redirect_to)
-    return redirect('login')
 
+    if request.method == 'POST':
+        # TODO make user is_active=False, then send activation email
+        user = User(username='s_' + request.POST['student_id'])
+        user.set_password(request.POST['password'])
+        user.save()
+        student = Student(user=user, student_id=request.POST['student_id'])
+        student.save()
 
+        login(request, user)
+        return render(request, 'authentication/signup/verification.html', \
+            {'message' : 'Your account was successfully created.', 'type' : 'success'})
 
-# def reset_password(request):
-    # if request.method == 'POST':
-    #     req = request.POST
-    #     email = req['email']
-    #     user = User.objects.filter(email=email)
-    #     if user:
-            
-    #     return HttpResponse('DONE!')
-
-    # return render(request,'authentication/reset_password.html',{})
+    return render(request,'authentication/signup/signup.html',{})

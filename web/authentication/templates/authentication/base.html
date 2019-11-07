@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block head %}
+  {{ block.super }}
+  <style>
+    body > .grid {
+      height: 100%;
+    }
+    .column {
+      max-width: 450px;
+    }
+  </style>
+{% endblock %}
+
+{% block body %}
+<div class="ui middle aligned center aligned grid">
+  <div class="column">
+    <h2 class="ui black header">
+      <div class="content">
+          <img src="{% static 'images/logo.png' %}" style="height:2em; vertical-align: middle;"><span style="vertical-align: middle; margin-left:-0.5em">AREMI</span>
+      </div>
+    </h2>
+    {% block content %}
+    {% endblock %}
+  </div>
+</div>
+{% endblock %}
