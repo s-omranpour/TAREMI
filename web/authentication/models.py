@@ -11,18 +11,5 @@ class Student(models.Model):
     major = models.CharField(max_length=2, choices=CONSTANTS.MAJORS, default='1')
     enterance_year = models.IntegerField(null=False, default=1395)
 
-
 class Instructor(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-
-
-@receiver(post_save, sender=User)
-def create_user_profile(sender, instance, created, **kwargs):
-    if created:
-        Student.objects.create(user=instance)
-
-
-@receiver(post_save, sender=User)
-def save_user_profile(sender, instance, **kwargs):
-    instance.student.save()
-
