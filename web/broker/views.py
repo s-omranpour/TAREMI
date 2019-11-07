@@ -1,8 +1,22 @@
-from django.http import HttpResponse
-from django.shortcuts import render
+
+from django.shortcuts import render, redirect
+
 from .models import *
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
+
+def home(request):
+    user = request.user
+    if user.student:
+        return redirect('student_home')
+    return
+
+def instructor_home(instructor):
+    pass
+
+
+def student_home(student):
+    pass
 
 @login_required(login_url='/account/login')
 def instructor_home(request):

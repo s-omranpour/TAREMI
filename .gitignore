@@ -1,6 +1,9 @@
 # vscode
 .vscode/
 
+# PyCharm
+*.iml
+
 # idea
 .idea/
 

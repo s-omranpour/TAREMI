@@ -26,7 +26,6 @@ class Question(models.Model):
 class ApplicationResponse(models.Model):
     owner = models.ForeignKey(Student, on_delete=models.CASCADE)
     date = models.DateField("date_submitted", auto_now=True)
-
     # todo
     # constraints = for all answer in self.answers answer.question.form should be the same
 
