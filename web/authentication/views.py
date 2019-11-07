@@ -30,14 +30,6 @@ def logout_user(request):
         logout(request)
     return redirect('login')
 
-def redirect_user(request):
-    redirect_to = settings.LOGIN_REDIRECT_URL
-    if request.user.is_authenticated:
-        return redirect(redirect_to)
-    return redirect('login')
-
-
-
 # def reset_password(request):
     # if request.method == 'POST':
     #     req = request.POST
