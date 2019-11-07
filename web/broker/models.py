@@ -33,14 +33,14 @@ class ApplicationResponse(models.Model):
 
 class Answer(models.Model):
 
-    response = models.ForeignKey(ApplicationResponse, on_delete=models.CASCADE)
+    response = models.ForeignKey(ApplicationResponse, on_delete=models.CASCADE, related_name='answers')
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
 
 class TextualQuestion(Question):
     pass
 class TextAnswer(Answer):
 
-    value = models.CharField('text_value', max_length=100)
+    value = models.CharField('text_value', max_length=100, default="kooooon")
     def __str__(self):
         return self.value
 
