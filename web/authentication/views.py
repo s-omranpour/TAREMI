@@ -8,6 +8,7 @@ from django.conf import settings
 
 from .models import Student
 
+
 def login_user(request):
     # TODO get redir from POST/GET
     redirect_to = settings.LOGIN_REDIRECT_URL
@@ -30,8 +31,6 @@ def logout_user(request):
     if request.user.is_authenticated:
         logout(request)
     return redirect('login')
-
-
 
 
 def signup_user(request):
