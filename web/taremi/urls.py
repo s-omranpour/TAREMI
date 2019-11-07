@@ -18,10 +18,6 @@ from django.urls import path, include
 
 urlpatterns = [
     path('account/', include('authentication.urls')),
-<<<<<<< HEAD
     path('home/', include('broker.urls')),
-=======
-    path('', include('broker.urls')),
->>>>>>> origin/broker
     path('admin/', admin.site.urls),
 ]

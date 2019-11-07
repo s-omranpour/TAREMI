@@ -13,18 +13,9 @@ def form_filling(request):
 def display(request):
     return HttpResponse('See Asghar : %s' % display_form(ApplicationResponse.objects.first()))
 
-<<<<<<< HEAD
-=======
 
->>>>>>> origin/broker
 def display_form(res: ApplicationResponse):
     html = ""
     for a in res.answers.order_by('question__number'):
         html += "<p> {} </p>".format(str(a.question)) + "<p>{}</p>".format(str((TextAnswer)(a)))
     return html
-<<<<<<< HEAD
-
-        
-
-=======
->>>>>>> origin/broker
