@@ -1,5 +1,5 @@
 from broker.models import *
-from users import student,instructor
+from mock.users import student,instructor
 
 
 form = ApplicationForm(course_id='kir', creator=instructor, info='kire khar')
