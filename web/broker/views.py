@@ -15,15 +15,18 @@ def home(request):
         return redirect('instructor_home')
 
 
-def student_home(student):
-    pass
+@login_required(login_url='/account/login')
+def student_home(request):
+    student = request.user.student
+    forms = ApplicationForm.objects.exclude(questions__answers__response__owner=student)
+    responses = student.responses.all()
+    return render(request, 'broker/student/home.html', context={'user':request.user, 'forms':forms, 'responses': responses})
 
 @login_required(login_url='/account/login')
 def instructor_home(request):
     user = request.user
     forms = user.instructor.forms.all()
-    responses = [len([answer.response for answer in form.questions.first().answers.all()]) for form in forms]
-    return render(request, 'broker/instructor_home.html', context={'user':user, 'form_res':zip(forms,responses)})
+    return render(request, 'broker/instructor/home.html', context={'user':user, 'forms':forms })
 
 
 @login_required(login_url='/account/login')
@@ -50,7 +53,7 @@ def instructor_response_detail(request, id):
 
 @login_required(login_url='/account/login')
 def instructor_create_form(request):
-    return 
+    return
 
 def form_filling(request):
     return render(request, 'broker')

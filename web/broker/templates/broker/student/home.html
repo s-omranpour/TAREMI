@@ -1,0 +1,72 @@
+{% extends "broker/base.html"%}
+{% load static %}
+
+{% block content %}
+  <div class="ui main text container" style="padding-left: -10em; ">
+    <h1 class="ui header">List of Available Applications</h1>
+      <div class="ui one column stackable grid">
+        <div class="column">
+          {% for form in forms %}
+            <div class="ui raised segment">
+                <div class="ui five column stackable grid">
+
+                    <div class="column middle aligned center aligned">
+                        <p>{{ form.course_id }}</p>
+                    </div>
+
+                    <div class="column middle aligned center aligned">
+                        <div class="ui label">
+                              <i class="clock outline icon"></i> {{ form.release_date }}
+                        </div>
+                    </div>
+
+                    <div class="column middle aligned center aligned">
+                        <div class="ui label">
+                              <i class="clock icon"></i> {{ form.deadline }}
+                        </div>
+                    </div>
+
+                    <div class="column middle aligned center aligned">
+                        <div class="ui label">
+                              <i class="pen square icon"></i> {{ form.get_responses.count }}
+                        </div>
+                    </div>
+
+                    <div class="column middle aligned center aligned">
+                        <a class="ui animated grey button" tabindex="0" href="{% url 'form_detail' id=form.id %}">
+                          <div class="visible content">Details</div>
+                          <div class="hidden content">
+                            <i class="right arrow icon"></i>
+                          </div>
+                      </a>
+                    </div>
+
+                </div>
+            </div>
+          {% endfor %}
+      </div>
+    </div>
+    <h1 class="ui header">List of Ongoing Applications</h1>
+      <div class="ui one column stackable grid">
+        <div class="column">
+          {% for resp in responses %}
+            <div class="ui raised segment">
+                <div class="ui two column stackable grid">
+
+                    <div class="column middle aligned center aligned">
+                        <p>{{ resp.form.course_id }}</p>
+                    </div>
+
+                    <div class="column middle aligned center aligned">
+                        <div class="ui label {% if resp.state == 'a' %}green{% elif resp.state == 'd' %}red{% endif %}">
+                              {{ resp.get_state_display }}
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+          {% endfor %}
+      </div>
+    </div>
+  </div>
+{% endblock %}
