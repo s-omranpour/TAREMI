@@ -26,38 +26,17 @@
 
 {% block body %}
   {{ block.super }}
-  <div class="ui fixed inverted menu">
+  <div class="ui fixed menu">
     <div class="ui container">
-      <a href="#" class="header item">
+      <a href="{% url 'home' %}" class="header item">
         <img class="logo" src="static/images/logo.png">
         Taremi
       </a>
-      <a href="/" class="item">Home</a>
-      <div class="ui simple dropdown item">
-        Dashboard <i class="dropdown icon"></i>
-        <div class="menu">
-          <a class="item" href="#">Pending Applications</a>
-          <a class="item" href="#">Link Item</a>
-          <div class="divider"></div>
-          <div class="header">Header Item</div>
-          <div class="item">
-            <i class="dropdown icon"></i>
-            Sub Menu
-            <div class="menu">
-              <a class="item" href="#">Link Item</a>
-              <a class="item" href="#">Link Item</a>
-            </div>
-          </div>
-          <a class="item" href="#">Link Item</a>
-        </div>
+      <div class="right menu">
+        <a href="{% url 'logout' %}" class="item">Logout</a>
       </div>
     </div>
   </div>
-        {% block content %}
-        {% endblock %}
-  <div class="ui inverted vertical footer segment">
-    <div class="ui center aligned container">
-      <img src="{% static 'images/logo.png' %}" class="ui centered mini image inverted">
-    </div>
-  </div>
+  {% block content %}
+  {% endblock %}
 {% endblock %}

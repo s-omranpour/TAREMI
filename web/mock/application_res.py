@@ -8,7 +8,7 @@ form.save()
 q = TextualQuestion(form=form, question='kir?',number=1)
 q.save()
 
-res = ApplicationResponse(owner=student)
+res = ApplicationResponse(owner=student, state='p')
 res.save()
 
 a = TextAnswer(response=res, question=q, value='kun')

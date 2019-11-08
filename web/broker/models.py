@@ -11,6 +11,9 @@ class ApplicationForm(models.Model):
     deadline = models.DateField("deadline", auto_now=True)
     info = models.CharField("information", max_length=1000)
 
+    def get_responses(self):
+        return ApplicationResponse.objects.filter(answers__question__form=self)
+
 class Question(models.Model):
     form = models.ForeignKey(ApplicationForm, on_delete=models.CASCADE, related_name="questions")
     question = models.CharField("question", max_length=QUESTION_MAX_LENGTH)
@@ -26,12 +29,15 @@ class Question(models.Model):
 class ApplicationResponse(models.Model):
     owner = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='responses')
     date = models.DateField("date_submitted", auto_now=True)
+    state = models.CharField(max_length=1, choices=APPLICATION_STATES)
+
+    def get_form(self):
+        return self.answers.first().question.form
     # todo
     # constraints = for all answer in self.answers answer.question.form should be the same
 
 
 class Answer(models.Model):
-
     response = models.ForeignKey(ApplicationResponse, on_delete=models.CASCADE, related_name='answers')
     question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name='answers')
 
