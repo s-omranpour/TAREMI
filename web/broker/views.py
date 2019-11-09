@@ -1,5 +1,6 @@
 
 from django.shortcuts import render, redirect
+from django.db.models.query import EmptyQuerySet
 
 from .models import *
 from django.http import HttpResponse
@@ -7,20 +8,52 @@ from django.contrib.auth.decorators import login_required
 
 def home(request):
     user = request.user
-    if user.student:
-        return redirect('student_home')
-    return
+    try:
+        if user.student:
+            return redirect('student_home')
+    except:
+        return redirect('instructor_home')
 
-def instructor_home(instructor):
-    pass
 
-
-def student_home(student):
-    pass
+@login_required(login_url='/account/login')
+def student_home(request):
+    student = request.user.student
+    forms = ApplicationForm.objects.exclude(questions__answers__response__owner=student)
+    responses = student.responses.all()
+    return render(request, 'broker/student/home.html', context={'user':request.user, 'forms':forms, 'responses': responses})
 
 @login_required(login_url='/account/login')
 def instructor_home(request):
-    return render(request, 'broker/instructor_home.html', context={})
+    user = request.user
+    forms = user.instructor.forms.all()
+    return render(request, 'broker/instructor/home.html', context={'user':user, 'forms':forms })
+
+
+@login_required(login_url='/account/login')
+def instructor_form_detail(request, id):
+    user = request.user
+    form = ApplicationForm.objects.filter(id=id).first()
+    if isinstance(form, EmptyQuerySet):
+        # todo: error
+        pass
+    responses = [answer.response for answer in form.questions.first().answers.all()]
+    constext = {'form':form , 'responses':responses}
+    return HttpResponse(form.info)
+
+
+@login_required(login_url='/account/login')
+def instructor_response_detail(request, id):
+    user = request.user
+    response = ApplicationResponse.objects.filter(id=id).first()
+    if isinstance(response, EmptyQuerySet):
+        # todo: error
+        pass
+    return HttpResponse(response)
+
+
+@login_required(login_url='/account/login')
+def instructor_create_form(request):
+    return
 
 def form_filling(request):
     return render(request, 'broker')

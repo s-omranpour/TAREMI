@@ -6,13 +6,16 @@ from authentication.models import Instructor, Student
 
 class ApplicationForm(models.Model):
     course_id = models.CharField("course_id", max_length=10)
-    creator = models.ForeignKey(Instructor, on_delete=models.CASCADE)
+    creator = models.ForeignKey(Instructor, on_delete=models.CASCADE, related_name='forms')
     release_date = models.DateField("release_date", auto_now=True)
     deadline = models.DateField("deadline", auto_now=True)
     info = models.CharField("information", max_length=1000)
 
+    def get_responses(self):
+        return ApplicationResponse.objects.filter(answers__question__form=self)
+
 class Question(models.Model):
-    form = models.ForeignKey(ApplicationForm, on_delete=models.CASCADE, related_name="textual_questions")
+    form = models.ForeignKey(ApplicationForm, on_delete=models.CASCADE, related_name="questions")
     question = models.CharField("question", max_length=QUESTION_MAX_LENGTH)
     number = models.IntegerField()
 
@@ -24,16 +27,19 @@ class Question(models.Model):
 
 
 class ApplicationResponse(models.Model):
-    owner = models.ForeignKey(Student, on_delete=models.CASCADE)
+    owner = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='responses')
     date = models.DateField("date_submitted", auto_now=True)
+    state = models.CharField(max_length=1, choices=APPLICATION_STATES)
+
+    def get_form(self):
+        return self.answers.first().question.form
     # todo
     # constraints = for all answer in self.answers answer.question.form should be the same
 
 
 class Answer(models.Model):
-
     response = models.ForeignKey(ApplicationResponse, on_delete=models.CASCADE, related_name='answers')
-    question = models.ForeignKey(Question, on_delete=models.CASCADE)
+    question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name='answers')
 
 class TextualQuestion(Question):
     pass
