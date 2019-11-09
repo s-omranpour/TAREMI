@@ -1,26 +1,8 @@
-
-from django.shortcuts import render, redirect
-from django.db.models.query import EmptyQuerySet
-
-from .models import *
 from django.http import HttpResponse
+from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 
-def home(request):
-    user = request.user
-    try:
-        if user.student:
-            return redirect('student_home')
-    except:
-        return redirect('instructor_home')
-
-
-@login_required(login_url='/account/login')
-def student_home(request):
-    student = request.user.student
-    forms = ApplicationForm.objects.exclude(questions__answers__response__owner=student)
-    responses = student.responses.all()
-    return render(request, 'broker/student/home.html', context={'user':request.user, 'forms':forms, 'responses': responses})
+from ..models import *
 
 @login_required(login_url='/account/login')
 def instructor_home(request):
@@ -54,16 +36,3 @@ def instructor_response_detail(request, id):
 @login_required(login_url='/account/login')
 def instructor_create_form(request):
     return
-
-def form_filling(request):
-    return render(request, 'broker')
-
-def display(request):
-    return HttpResponse('See Asghar : %s' % display_form(ApplicationResponse.objects.first()))
-
-
-def display_form(res: ApplicationResponse):
-    html = ""
-    for a in res.answers.order_by('question__number'):
-        html += "<p> {} </p>".format(str(a.question)) + "<p>{}</p>".format(str((TextAnswer)(a)))
-    return html
