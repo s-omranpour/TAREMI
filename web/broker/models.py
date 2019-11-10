@@ -55,6 +55,17 @@ class ApplicationResponse(models.Model):
 class Answer(models.Model):
     response = models.ForeignKey(ApplicationResponse, on_delete=models.CASCADE, related_name='answers')
     question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name='answers')
+    type = models.CharField("type", max_length=255)
+
+    def save(self, *args, **kwargs):
+        self.type = self.__class__.__name__
+        super().save(*args, **kwargs)
+
+    def typed(self):
+        if self.type:
+            return self.__getattribute__(self.type.lower())
+        else:
+            return self
 
 class TextualQuestion(Question):
     def make_answer(self):
@@ -63,8 +74,7 @@ class TextualQuestion(Question):
         return t
 
 class TextualAnswer(Answer):
-
-    value = models.CharField('text_value', max_length=100, default="kooooon")
+    value = models.CharField('text_value', max_length=100, default="")
     def __str__(self):
         return self.value
 

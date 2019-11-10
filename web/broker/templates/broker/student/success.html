@@ -1,0 +1,21 @@
+{% extends "broker/base.html"%}
+
+{% block head %}
+{{ block.super }}
+<style>
+  body > .grid {
+    height: 100%;
+  }
+  .column {
+    max-width: 450px;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="ui middle aligned center aligned grid">
+  <div class="column">
+    <div class="ui message success">{{ message|safe }}</div>
+  </div>
+</div>
+{% endblock %}

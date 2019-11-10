@@ -1,7 +1,7 @@
 from .models import *
 
 class AnswerRenderer:
-    def __init__(answer):
+    def __init__(self, answer):
         self.answer = answer
         self.field_name = 'ans_%d' % self.answer.question.number
 
@@ -22,7 +22,7 @@ class TextualRenderer(AnswerRenderer):
     def render_fixed(self):
         return """<div>%s</div>""" % self.answer.value
 
-    def render_fixed(self):
+    def render_editable(self):
         return """<input type="text" name="{name}" value="{value}">""".format(name=self.field_name, value=self.answer.value)
 
 renderers = {TextualAnswer: TextualRenderer}
@@ -34,22 +34,41 @@ def render_field(answer, editable):
     else:
         return renderer.render_fixed()
 
-def render(response, editable):
+def render_form(form, response=None, editable=False):
     content = ""
-    for a in response.answers.order_by('question__number'):
+    for q in form.questions.order_by('number'):
+        if response is None:
+            a = q.typed().make_answer()
+            print('new response :: ', a.value)
+        else:
+            a = response.answers(question=q)
+
         content += """
           <div class="field">
             <label>{question}</label>
             {answer}
           </div>
-        """.format(question=str(a.question), answer=render_field(a, editable))
+        """.format(question=str(q), answer=render_field(a, editable))
 
     if editable:
         content += """
           <button class="ui button" type="submit">Submit</button>
         """
 
-    return """<form class="ui form">
-        <h4 class="ui dividing header">{title}</h4>
+    return """<form class="ui form" method="post">
+        {csrf}
+        <h1 class="ui header">{title}</h1>
         {content}
-        </form>""".format(title=response.get_form().information, content=content)
+        </form>""".format(title=form.info, content=content, csrf='{% csrf_token %}')
+
+def save_form(form, data, response):
+    for q in form.questions.all():
+        a = response.answers.get(question=q)
+        if a is None:
+            a = q.typed().make_answer()
+            a.response = response
+        else:
+            a = a.typed()
+
+        renderers[a.__class__](a).read_from_post(data)
+        a.save()

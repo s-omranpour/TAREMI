@@ -1,39 +1,6 @@
 {% extends "authentication/base.html" %}
 {% load static %}
 
-{% block head %}
-  {{ block.super }}
-  <script>
-  $(document)
-    .ready(function() {
-      $('.ui.form')
-        .form({
-          fields: {
-            username: {
-              identifier  : 'username',
-              rules: [
-                {
-                  type   : 'empty',
-                  prompt : 'Please enter your username'
-                }
-              ]
-            },
-            password: {
-              identifier  : 'password',
-              rules: [
-                {
-                  type   : 'empty',
-                  prompt : 'Please enter your password'
-                }
-              ]
-            }
-          }
-        })
-      ;
-    });
-  </script>
-{% endblock %}
-
 {% block content %}
   {# type must be success or error #}
   <div class="ui message {{ type }}">{{ message|safe }}</div>
