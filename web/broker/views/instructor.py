@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 
 from ..models import *
+from ..forms import render_form
 
 @login_required()
 def instructor_home(request):
@@ -18,22 +19,24 @@ def instructor_home(request):
 def instructor_form_detail(request, id):
     user = request.user
     form = ApplicationForm.objects.filter(id=id).first()
-    if isinstance(form, EmptyQuerySet):
-        # todo: error
-        pass
-    responses = [answer.response for answer in form.questions.first().answers.all()]
-    constext = {'form':form , 'responses':responses}
-    return HttpResponse(form.info)
+    # if isinstance(form, EmptyQuerySet):
+    #     # todo: error
+    #     pass
+    #responses = [answer.response for answer in form.questions.first().answers.all()]
+    responses = ApplicationResponse.objects.filter(answers__question__form = form).distinct()
+    return render(request, 'broker/instructor/form.html', context={'form':form , 'responses':responses})
 
 
 @login_required()
 def instructor_response_detail(request, id):
     user = request.user
     response = ApplicationResponse.objects.filter(id=id).first()
-    if isinstance(response, EmptyQuerySet):
-        # todo: error
-        pass
-    return HttpResponse(response)
+    form = response.get_form()
+    html = render_form(form, response, False)
+    # if isinstance(response, EmptyQuerySet):
+    #     # todo: error
+    #     pass
+    return render(request, 'broker/instructor/response.html', context={'html':html, 'response_id':response.id})
 
 # TODO move this shit to API
 @csrf_exempt

@@ -1,0 +1,65 @@
+{% extends "broker/base.html"%}
+{% load static %}
+
+{% block head %}
+    {{ block.super }}
+    <script>
+        function change_response_state(select_element, id){
+            $.post('/api/change_response_state', {id:id, state:select_element.value});
+        }
+    </script>
+{% endblock %}
+
+{% block content %}
+  <div class="ui main text container" style="padding-left: -10em; ">
+    <h1 class="ui header">List of Responses</h1>
+    {% for response in responses %}
+      <div class="ui raised segment">
+          <div class="ui equal width grid">
+              <div class="column middle aligned center aligned">
+                  <p>{{ response.owner.user.first_name }} {{ response.owner.user.last_name }} {{response.owner.user.username}}</p>
+              </div>
+
+              <div class="column middle aligned center aligned">
+                  <div class="ui label">
+                    time
+                    <div class="detail">{{ response.date|date:"M d" }}</div>
+                  </div>
+              </div>
+
+              <div class="column middle aligned center aligned">
+                  <a class="ui animated grey button" tabindex="0" href="{% url 'instructor_response_detail' id=response.id %}">
+                    <div class="visible content">Details</div>
+                    <div class="hidden content">
+                      <i class="right arrow icon"></i>
+                    </div>
+                </a>
+              </div>
+
+              <div class="column middle aligned center aligned">
+                <select class="ui dropdown" onchange="change_response_state(this, {{ response.id }})">
+                  {% if response.state == 'r'%}
+                    <option value="r" selected>Rejected</option>
+                  {% else %}
+                    <option value="r">Rejected</option>
+                  {% endif %}
+
+                  {% if response.state == 'p'%}
+                    <option value="p" selected>Pending</option>
+                  {% else %}
+                    <option value="p">Pending</option>
+                  {% endif %}
+
+                  {% if response.state == 'a'%}
+                    <option value="a" selected>Approved</option>
+                  {% else %}
+                    <option value="a">Approved</option>
+                  {% endif %}
+                  </select>
+              </div>
+
+          </div>
+      </div>
+    {% endfor %}
+  </div>
+{% endblock %}

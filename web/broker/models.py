@@ -12,7 +12,7 @@ class ApplicationForm(models.Model):
     info = models.CharField("information", max_length=1000)
 
     def get_responses(self):
-        return ApplicationResponse.objects.filter(answers__question__form=self)
+        return ApplicationResponse.objects.filter(answers__question__form=self).distinct()
 
 class Question(models.Model):
     class Meta:
@@ -100,7 +100,4 @@ class NumericalAnswer(Answer):
     value = models.IntegerField('int_value')
 
     def __str__(self):
-        return self.value
-
-# todo
-# correct mapping between answer type and question type
+        return str(self.value)
