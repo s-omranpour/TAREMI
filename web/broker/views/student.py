@@ -1,6 +1,8 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from ..forms import render
+from django.template import RequestContext
+from django.template import Template
+from ..forms import render_form, save_form
 
 from ..models import *
 
@@ -14,10 +16,17 @@ def student_home(request):
 @login_required()
 def application(request, id):
     form = ApplicationForm.objects.get(id=id)
-    resp = ApplicationResponse()
-    for q in form.questions.all():
-        t = q.typed().make_answer()
-        t.response = resp
 
-    resp.answers.all()
-    return render(request, 'broker/student/application.html', context={'form': render(form)})
+    if request.method == "GET":
+        form_template = Template(render_form(form, editable=True))
+        form_html = form_template.render(RequestContext(request))
+        return render(request, 'broker/student/application.html', context={'form': form_html})
+    else:
+        response = ApplicationResponse(owner=request.user.student, state = 'p')
+        response.save()
+        save_form(form, request.POST, response)
+
+        return redirect('application_success')
+
+def application_success(request):
+    return render(request, 'broker/student/success.html', {'message' : 'Your Application Successfully Submited.'})

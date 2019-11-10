@@ -1,4 +1,8 @@
 {% extends "broker/base.html"%}
 {% block content %}
-{{ form }}
+<div class="ui main text container" style="padding-left: -10em; ">
+  <div class="ui raised segment">
+    {{ form|safe }}
+  </div>
+</div>
 {% endblock %}
