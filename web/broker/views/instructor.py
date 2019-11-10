@@ -1,4 +1,4 @@
-from datetime import timedelta
+from datetime import datetime, timedelta
 
 from django.http import HttpResponse
 from django.shortcuts import render
@@ -46,11 +46,12 @@ def instructor_create_form(request):
         return render(request, 'broker/instructor/form_creation.html', {})
     else:
         form = ApplicationForm(creator=request.user.instructor)
+        form.release_date = datetime.now()
         form.deadline = form.release_date + timedelta(days=10)
         form.course_id = request.POST["course"]
         form.info = request.POST["info"]
         form.save()
-        for i in range(1, int(reqest.POST["length"]) + 1):
+        for i in range(1, int(request.POST["length"]) + 1):
             if request.POST["q_%d_type" % i] == "textual":
                 q = TextualQuestion(form=form, question=request.POST["q_%d_body" % i], number=i)
                 q.save()
