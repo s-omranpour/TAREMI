@@ -15,15 +15,30 @@ class ApplicationForm(models.Model):
         return ApplicationResponse.objects.filter(answers__question__form=self)
 
 class Question(models.Model):
+    class Meta:
+        constraints = [models.UniqueConstraint(fields=['form', 'number'], name='unique_form_number')]
+
     form = models.ForeignKey(ApplicationForm, on_delete=models.CASCADE, related_name="questions")
     question = models.CharField("question", max_length=QUESTION_MAX_LENGTH)
     number = models.IntegerField()
+    type = models.CharField("type", max_length=255)
+
+    def save(self, *args, **kwargs):
+        self.type = self.__class__.__name__
+        super().save(*args, **kwargs)
+
+    def typed(self):
+        if self.type:
+            return self.__getattribute__(self.type.lower())
+        else:
+            return self
+
+    def make_answer(self):
+        raise NotImplementedError
 
     def __str__(self):
         return self.question
 
-    class Meta:
-        constraints = [models.UniqueConstraint(fields=['form', 'number'], name='unique_form_number')]
 
 
 class ApplicationResponse(models.Model):
@@ -42,15 +57,22 @@ class Answer(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name='answers')
 
 class TextualQuestion(Question):
-    pass
-class TextAnswer(Answer):
+    def make_answer(self):
+        t = TextualAnswer()
+        t.question = self
+        return t
+
+class TextualAnswer(Answer):
 
     value = models.CharField('text_value', max_length=100, default="kooooon")
     def __str__(self):
         return self.value
 
 class MultiChoiceQuestion(Question):
-    pass
+    def make_answer(self):
+        t = MultiChoiceAnswer()
+        t.question = self
+
 class MultiChoiceAnswer(Answer):
     value = models.CharField("choice_value", max_length=CHOICE_MAX_LENGTH)
 
@@ -59,7 +81,11 @@ class MultiChoiceAnswer(Answer):
 
 
 class NumericalQuestion(Question):
-    pass
+    def make_answer(self):
+        t = NumericalAnswer()
+        t.question = self
+        return t
+
 class NumericalAnswer(Answer):
     value = models.IntegerField('int_value')
 
