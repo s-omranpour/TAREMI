@@ -15,22 +15,23 @@ def instructor_home(request):
 def instructor_form_detail(request, id):
     user = request.user
     form = ApplicationForm.objects.filter(id=id).first()
-    if isinstance(form, EmptyQuerySet):
-        # todo: error
-        pass
-    responses = [answer.response for answer in form.questions.first().answers.all()]
-    constext = {'form':form , 'responses':responses}
-    return HttpResponse(form.info)
+    # if isinstance(form, EmptyQuerySet):
+    #     # todo: error
+    #     pass
+    #responses = [answer.response for answer in form.questions.first().answers.all()]
+    responses = ApplicationResponse.objects.filter(answers__question__form = form)
+    return render(request, 'broker/instructor/form.html', context={'form':form , 'responses':responses})
 
 
 @login_required(login_url='/account/login')
 def instructor_response_detail(request, id):
     user = request.user
     response = ApplicationResponse.objects.filter(id=id).first()
-    if isinstance(response, EmptyQuerySet):
-        # todo: error
-        pass
-    return HttpResponse(response)
+    form = response.get_form()
+    # if isinstance(response, EmptyQuerySet):
+    #     # todo: error
+    #     pass
+    return render(request, 'broker/instructor/response.html', context={})
 
 
 @login_required(login_url='/account/login')
