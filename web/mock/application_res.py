@@ -11,5 +11,5 @@ q.save()
 res = ApplicationResponse(owner=student, state='p')
 res.save()
 
-a = TextAnswer(response=res, question=q, value='kun')
+a = TextualAnswer(response=res, question=q, value='kun')
 a.save()

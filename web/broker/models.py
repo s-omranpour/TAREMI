@@ -21,11 +21,17 @@ class Question(models.Model):
     form = models.ForeignKey(ApplicationForm, on_delete=models.CASCADE, related_name="questions")
     question = models.CharField("question", max_length=QUESTION_MAX_LENGTH)
     number = models.IntegerField()
+    type = models.CharField("type", max_length=255)
+
+    def save(self, *args, **kwargs):
+        self.type = self.__class__.__name__
+        super().save(*args, **kwargs)
 
     def typed(self):
-        print(self.__class__)
-        return 0
-        #self.__getattribute__(self.__class__)
+        if self.type:
+            return self.__getattribute__(self.type.lower())
+        else:
+            return self
 
     def make_answer(self):
         raise NotImplementedError
@@ -54,6 +60,7 @@ class TextualQuestion(Question):
     def make_answer(self):
         t = TextualAnswer()
         t.question = self
+        return t
 
 class TextualAnswer(Answer):
 
@@ -77,6 +84,7 @@ class NumericalQuestion(Question):
     def make_answer(self):
         t = NumericalAnswer()
         t.question = self
+        return t
 
 class NumericalAnswer(Answer):
     value = models.IntegerField('int_value')

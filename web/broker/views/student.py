@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
+from ..forms import render
 
 from ..models import *
 
@@ -15,9 +16,8 @@ def application(request, id):
     form = ApplicationForm.objects.get(id=id)
     resp = ApplicationResponse()
     for q in form.questions.all():
-        q.typed()
-        #t = q.make_answer()
-        #t.response = resp
+        t = q.typed().make_answer()
+        t.response = resp
 
-    print(resp.answers.all)
-    return render(request, 'broker/student/application.html', context={'form': ''})
+    resp.answers.all()
+    return render(request, 'broker/student/application.html', context={'form': render(form)})

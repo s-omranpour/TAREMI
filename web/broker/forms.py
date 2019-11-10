@@ -5,7 +5,7 @@ class AnswerRenderer:
         self.answer = answer
         self.field_name = 'ans_%d' % self.answer.question.number
 
-    def read_from_post(self, post_data)
+    def read_from_post(self, post_data):
         raise NotImplementedError()
 
     def render_editable(self):
@@ -34,9 +34,9 @@ def render_field(answer, editable):
     else:
         return renderer.render_fixed()
 
-def render(form, editable):
+def render(response, editable):
     content = ""
-    for a in form.answers.order_by('question__number'):
+    for a in response.answers.order_by('question__number'):
         content += """
           <div class="field">
             <label>{question}</label>
@@ -52,4 +52,4 @@ def render(form, editable):
     return """<form class="ui form">
         <h4 class="ui dividing header">{title}</h4>
         {content}
-        </form>""".format(title=form.information, content=content)
+        </form>""".format(title=response.get_form().information, content=content)
