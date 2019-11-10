@@ -1,4 +1,5 @@
 from .models import *
+from django.db.models.query import EmptyQuerySet
 
 class AnswerRenderer:
     def __init__(self, answer):
@@ -68,8 +69,8 @@ def render_form(form, response=None, editable=False):
             </div>""".format(title=form.info, user=response.owner.get_full_name(), content=content)
 
 def save_form(form, data, response):
-    for q in form.questions.all():
-        a = response.answers.get(question=q)
+    for q in form.questions.order_by('number'):
+        a = response.answers.filter(question=q).first()
         if a is None:
             a = q.typed().make_answer()
             a.response = response
