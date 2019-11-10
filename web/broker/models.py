@@ -100,4 +100,4 @@ class NumericalAnswer(Answer):
     value = models.IntegerField('int_value')
 
     def __str__(self):
-        return self.value
+        return str(self.value)

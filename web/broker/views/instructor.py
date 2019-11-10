@@ -30,11 +30,10 @@ def instructor_response_detail(request, id):
     response = ApplicationResponse.objects.filter(id=id).first()
     form = response.get_form()
     html = render_form(form, response, False)
-
     # if isinstance(response, EmptyQuerySet):
     #     # todo: error
     #     pass
-    return render(request, 'broker/instructor/response.html', context={'html':html})
+    return render(request, 'broker/instructor/response.html', context={'html':html, 'response_id':response.id})
 
 
 @login_required(login_url='/account/login')

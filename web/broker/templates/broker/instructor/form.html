@@ -12,7 +12,7 @@
 
 {% block content %}
   <div class="ui main text container" style="padding-left: -10em; ">
-    <h1 class="ui header">List of Applications</h1>
+    <h1 class="ui header">List of Responses</h1>
     {% for response in responses %}
       <div class="ui raised segment">
           <div class="ui equal width grid">
@@ -28,7 +28,7 @@
               </div>
 
               <div class="column middle aligned center aligned">
-                  <a class="ui animated grey button" tabindex="0" href="{% url 'response_detail' id=response.id %}">
+                  <a class="ui animated grey button" tabindex="0" href="{% url 'instructor_response_detail' id=response.id %}">
                     <div class="visible content">Details</div>
                     <div class="hidden content">
                       <i class="right arrow icon"></i>
@@ -38,9 +38,23 @@
 
               <div class="column middle aligned center aligned">
                 <select class="ui dropdown" onchange="change_response_state(this, {{ response.id }})">
-                    <option value="R">Rejected</option>
-                    <option value="P" selected>Pending</option>
-                    <option value="A">Approved</option>
+                  {% if response.state == 'r'%}
+                    <option value="r" selected>Rejected</option>
+                  {% else %}
+                    <option value="r">Rejected</option>
+                  {% endif %}
+
+                  {% if response.state == 'p'%}
+                    <option value="p" selected>Pending</option>
+                  {% else %}
+                    <option value="p">Pending</option>
+                  {% endif %}
+
+                  {% if response.state == 'a'%}
+                    <option value="a" selected>Approved</option>
+                  {% else %}
+                    <option value="a">Approved</option>
+                  {% endif %}
                   </select>
               </div>
 
