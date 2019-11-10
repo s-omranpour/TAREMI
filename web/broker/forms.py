@@ -20,7 +20,7 @@ class TextualRenderer(AnswerRenderer):
         self.answer.value = post_data[self.field_name]
 
     def render_fixed(self):
-        return """<div>%s</div>""" % self.answer.value
+        return """<div>Answer: %s</div>""" % self.answer.value
 
     def render_editable(self):
         return """<input type="text" name="{name}" value="{value}">""".format(name=self.field_name, value=self.answer.value)
@@ -41,25 +41,27 @@ def render_form(form, response=None, editable=False):
             a = q.typed().make_answer()
             print('new response :: ', a.value)
         else:
-            a = response.answers(question=q)
+            a = response.answers.get(question=q).typed()
 
         content += """
           <div class="field">
-            <label>{question}</label>
+            <label>Question: {question}</label>
             {answer}
           </div>
         """.format(question=str(q), answer=render_field(a, editable))
 
     if editable:
-        content += """
-          <button class="ui button" type="submit">Submit</button>
-        """
-
-    return """<form class="ui form" method="post">
-        {csrf}
-        <h1 class="ui header">{title}</h1>
-        {content}
-        </form>""".format(title=form.info, content=content, csrf='{% csrf_token %}')
+        return """<form class="ui form" method="post">
+            {csrf}
+            <h1 class="ui header">{title}</h1>
+            {content}
+            <button class="ui button" type="submit">Submit</button>
+            </form>""".format(title=form.info, content=content, csrf='{% csrf_token %}')
+    else:
+        return """<div class="ui form" method="post">
+            <h1 class="ui header">Title: {title}</h1>
+            {content}
+            </div>""".format(title=form.info, content=content)
 
 def save_form(form, data, response):
     for q in form.questions.all():

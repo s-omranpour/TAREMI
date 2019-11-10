@@ -11,5 +11,12 @@ class Student(models.Model):
     major = models.CharField(max_length=2, choices=CONSTANTS.MAJORS, default='1')
     enterance_year = models.IntegerField(null=False, default=1395)
 
+    def get_full_name(self):
+        return self.user.first_name + ' ' + self.user.last_name
+
 class Instructor(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
+    
+    def get_full_name(self):
+        return self.user.first_name + ' ' + self.user.last_name
+

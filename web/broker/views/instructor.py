@@ -3,6 +3,7 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 
 from ..models import *
+from ..forms import render_form
 
 @login_required(login_url='/account/login')
 def instructor_home(request):
@@ -19,7 +20,7 @@ def instructor_form_detail(request, id):
     #     # todo: error
     #     pass
     #responses = [answer.response for answer in form.questions.first().answers.all()]
-    responses = ApplicationResponse.objects.filter(answers__question__form = form)
+    responses = ApplicationResponse.objects.filter(answers__question__form = form).distinct()
     return render(request, 'broker/instructor/form.html', context={'form':form , 'responses':responses})
 
 
@@ -28,10 +29,12 @@ def instructor_response_detail(request, id):
     user = request.user
     response = ApplicationResponse.objects.filter(id=id).first()
     form = response.get_form()
+    html = render_form(form, response, False)
+
     # if isinstance(response, EmptyQuerySet):
     #     # todo: error
     #     pass
-    return render(request, 'broker/instructor/response.html', context={})
+    return render(request, 'broker/instructor/response.html', context={'html':html})
 
 
 @login_required(login_url='/account/login')
