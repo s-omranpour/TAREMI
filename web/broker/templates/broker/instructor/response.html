@@ -1,0 +1,44 @@
+{% extends "broker/base.html"%}
+
+{% block head %}
+    {{ block.super }}
+    <script>
+        $(function() {
+          $('.ui.dropdown').dropdown();
+        });
+        function change_response_state(select_element, id) {
+            $.post('/api/change_response_state', {id:id, state:select_element.value});
+        }
+    </script>
+{% endblock %}
+
+{% block content %}
+<div class="ui main text container" style="padding-left: -10em; ">
+  <div class="ui raised segment">
+    <!-- <div class="column left aligned center aligned"> -->
+
+    {{ html|safe }}
+
+     <select class="ui dropdown" onchange="change_response_state(this, {{ response.id }})">
+        {% if response.state == 'r'%}
+          <option value="r" selected>Rejected</option>
+        {% else %}
+          <option value="r">Rejected</option>
+        {% endif %}
+
+        {% if response.state == 'p'%}
+          <option value="p" selected>Pending</option>
+        {% else %}
+          <option value="p">Pending</option>
+        {% endif %}
+
+        {% if response.state == 'a'%}
+          <option value="a" selected>Approved</option>
+        {% else %}
+          <option value="a">Approved</option>
+        {% endif %}
+        </select>
+
+  </div>
+</div>
+{% endblock %}

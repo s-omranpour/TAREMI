@@ -14,7 +14,7 @@
             <div class="column middle aligned center aligned">
                 <div class="ui label">
                   Instructor
-                  <div class="detail">{{ form.creator.name }}</div>
+                  <div class="detail">{{ form.creator.get_full_name }}</div>
                 </div>
             </div>
 
@@ -26,7 +26,7 @@
             </div>
 
             <div class="column middle aligned center aligned">
-                <a class="ui animated grey button" tabindex="0" href="{% url 'form_detail' id=form.id %}">
+                <a class="ui animated grey button" tabindex="0" href="{% url 'apply_form' id=form.id %}">
                   <div class="visible content">Apply</div>
                   <div class="hidden content">
                     <i class="right arrow icon"></i>
@@ -49,7 +49,7 @@
               <div class="column middle aligned center aligned">
                   <div class="ui label">
                     Instructor
-                    <div class="detail">{{ form.creator.user.get_full_name }}</div>
+                    <div class="detail">{{ resp.get_form.creator.get_full_name }}</div>
                   </div>
               </div>
 

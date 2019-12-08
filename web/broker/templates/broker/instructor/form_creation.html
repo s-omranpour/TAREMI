@@ -1,0 +1,105 @@
+{% extends "broker/base.html"%}
+{% load static %}
+
+{% block head %}
+  {{ block.super }}
+  <style>
+    .question {
+      padding: 1em;
+    }
+  </style>
+  <script>
+    $(function() {
+      $('.ui.dropdown').dropdown();
+    });
+    const types = {
+      textual: {
+        name: function() {
+          return "textual";
+        },
+        html: function(i) {
+          content = ' \
+                <div class="question" id="q_{i}"> \
+                  <div class="ui fluid labeled input"> \
+                    <div class="ui label">Question {i} </div> \
+                    <input type="text" name="q_{i}_body" placeholder="Question body"> \
+                  </div> \
+                  \
+                  <div class="ui fluid disabled input"> \
+                    <input type="text" placeholder="Answer..."> \
+                  </div> \
+                  <button class="ui right floated icon button" onclick="state.remove({i})"> \
+                    <i class="delete icon"></i> \
+                  </button> \
+                  <br /> \
+                </div>';
+          return content.replace("{i}", i).replace("{i}", i).replace("{i}", i).replace("{i}", i);
+        }
+      }
+    };
+    var state = {
+      i: 1,
+      types: [],
+
+      add: function(type) {
+        $("#questions").append(type.html(this.i));
+        this.i += 1;
+        this.types.push(type.name());
+      },
+      remove: function(c) {
+        $("#q_" + c).remove();
+        for (j = c + 1; j < this.i; j ++) {
+          $("#q_" + j + " .label").text("Question " + (j - 1));
+          $("#q_" + j + " input").attr("name", "q_" + (j - 1) + "_body");
+          $("#q_" + j).attr("id", "q_" + (j - 1));
+        }
+        this.i -= 1;
+        this.types = this.types.splice(c, 1);
+      },
+      submit: function() {
+        var data = {course: $("[name='course']").val(), info: $("[name='info']").val(), length: (this.i - 1) };
+        for (j = 1; j < this.i; j ++) {
+          data["q_" + j + "_type"] = this.types[j - 1];
+          data["q_" + j + "_body"] = $("[name='q_" + j + "_body']").val();
+        }
+        console.log(data);
+        $.post("", data, function() {
+          window.location.href = '/'; 
+        });
+      }
+    };
+  </script>
+{% endblock %}
+
+{% block content %}
+  <div class="ui main text container" style="padding-left: -10em; ">
+    <div class="ui raised segment">
+
+      <h3 class="ui header"><div class="ui fluid labeled input">
+        <div class="ui label">Course </div>
+        <input type="text" name="course" placeholder="Course">
+      </div></h3>
+      <h3 class="ui header"><div class="ui fluid labeled input">
+        <div class="ui label">Info </div>
+        <input type="text" name="info" placeholder="Info">
+      </div></h3>
+      <div id="questions">
+      </div>
+      <div class="ui divider"></div>
+      <div class="ui grid">
+        <div class="ui column">
+          <button class="ui left floated grey button" onclick="state.submit()">
+            Create
+          </button>
+          <div class="ui right floated floating dropdown icon button">
+            <i class="plus icon"></i>
+            <div class="menu">
+              <div class="item" onclick="state.add(types.textual)">Text Question</div>
+            </div>
+          </div>
+        </div>
+    </div>
+  </div>
+
+  </div>
+{% endblock %}
