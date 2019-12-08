@@ -36,7 +36,7 @@ def instructor_response_detail(request, id):
     # if isinstance(response, EmptyQuerySet):
     #     # todo: error
     #     pass
-    return render(request, 'broker/instructor/response.html', context={'html':html, 'response_id':response.id})
+    return render(request, 'broker/instructor/response.html', context={'html':html, 'response':response})
 
 # TODO move this shit to API
 @csrf_exempt

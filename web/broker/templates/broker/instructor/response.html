@@ -3,7 +3,10 @@
 {% block head %}
     {{ block.super }}
     <script>
-        function change_response_state(select_element, id){
+        $(function() {
+          $('.ui.dropdown').dropdown();
+        });
+        function change_response_state(select_element, id) {
             $.post('/api/change_response_state', {id:id, state:select_element.value});
         }
     </script>
@@ -13,7 +16,10 @@
 <div class="ui main text container" style="padding-left: -10em; ">
   <div class="ui raised segment">
     <!-- <div class="column left aligned center aligned"> -->
-      <select class="ui dropdown" onchange="change_response_state(this, {{ response_id }})" style="float:right">
+
+    {{ html|safe }}
+
+     <select class="ui dropdown" onchange="change_response_state(this, {{ response.id }})">
         {% if response.state == 'r'%}
           <option value="r" selected>Rejected</option>
         {% else %}
@@ -32,9 +38,6 @@
           <option value="a">Approved</option>
         {% endif %}
         </select>
-    <!-- </div> -->
-
-    {{ html|safe }}
 
   </div>
 </div>
